@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Átomo Express ⚛️ — Revisão para a Prova</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --card: #1c2230;
+    --border: #2a3347;
+    --accent: #a78bfa;
+    --accent2: #34d399;
+    --accent3: #f472b6;
+    --accent4: #facc15;
+    --text: #e8eaf0;
+    --muted: #7a8499;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+  .hero { padding: 60px 24px 50px; text-align: center; background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(167,139,250,0.1), transparent), radial-gradient(ellipse 50% 40% at 80% 80%, rgba(52,211,153,0.07), transparent); border-bottom: 1px solid var(--border); }
+  .hero-badge { display: inline-block; background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.3); color: var(--accent); font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
+  .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.2rem, 6vw, 3.6rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px; }
+  .hero h1 span { color: var(--accent); }
+  .hero p { color: var(--muted); font-size: 1rem; max-width: 480px; margin: 0 auto 28px; }
+  .pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .pill { display: flex; align-items: center; gap: 7px; background: var(--surface); border: 1px solid var(--border); border-radius: 30px; padding: 7px 16px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; color: var(--text); }
+  .pill:hover { border-color: var(--accent); color: var(--accent); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .da { background: var(--accent); } .db { background: var(--accent2); } .dc { background: var(--accent3); }
+
+  .progress-bar-wrap { background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 24px; position: sticky; top: 0; z-index: 99; display: flex; align-items: center; gap: 12px; }
+  .progress-label { font-size: 0.75rem; color: var(--muted); white-space: nowrap; font-family: 'Syne', sans-serif; }
+  .progress-track { flex: 1; height: 4px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 10px; width: 0%; transition: width 0.4s; }
+  .progress-pct { font-size: 0.75rem; color: var(--accent); font-weight: 600; min-width: 28px; }
+
+  .container { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+
+  .sec-head { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 32px; }
+  .sec-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+  .ia { background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.2); }
+  .ib { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.2); }
+  .ic { background: rgba(244,114,182,0.1); border: 1px solid rgba(244,114,182,0.2); }
+  .sec-head h2 { font-family: 'Syne', sans-serif; font-size: 1.55rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 3px; }
+  .sec-head p { color: var(--muted); font-size: 0.88rem; }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px; margin-bottom: 14px; }
+  .card-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tag { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 6px; }
+  .ta { background: rgba(167,139,250,0.13); color: var(--accent); }
+  .tb { background: rgba(52,211,153,0.13); color: var(--accent2); }
+  .tc { background: rgba(244,114,182,0.13); color: var(--accent3); }
+  .td { background: rgba(250,204,21,0.13); color: var(--accent4); }
+
+  .hl { border-left: 3px solid var(--accent); background: rgba(167,139,250,0.05); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 12px 0; font-size: 0.9rem; }
+  .hl.g { border-color: var(--accent2); background: rgba(52,211,153,0.05); }
+  .hl.p { border-color: var(--accent3); background: rgba(244,114,182,0.05); }
+  .hl.y { border-color: var(--accent4); background: rgba(250,204,21,0.05); }
+  .hl strong { color: var(--accent); }
+  .hl.g strong { color: var(--accent2); }
+  .hl.p strong { color: var(--accent3); }
+  .hl.y strong { color: var(--accent4); }
+
+  .formula { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 1.05rem; text-align: center; color: var(--accent4); margin: 10px 0; font-family: 'Syne', sans-serif; font-weight: 700; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin: 12px 0; }
+  th { background: rgba(255,255,255,0.03); font-family: 'Syne', sans-serif; font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.07em; padding: 9px 13px; text-align: left; border-bottom: 1px solid var(--border); color: var(--muted); }
+  td { padding: 9px 13px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media(max-width:580px){ .g2 { grid-template-columns: 1fr; } }
+
+  ul.nl { list-style: none; padding: 0; }
+  ul.nl li { padding: 6px 0 6px 20px; position: relative; font-size: 0.9rem; color: #bcc5d6; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  ul.nl li:last-child { border-bottom: none; }
+  ul.nl li::before { content: '◆'; position: absolute; left: 0; font-size: 0.4rem; top: 12px; color: var(--accent); }
+  ul.nl.g li::before { color: var(--accent2); }
+  ul.nl.p li::before { color: var(--accent3); }
+
+  .acc-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+  .acc-btn { width: 100%; background: none; border: none; color: var(--text); padding: 15px 18px; text-align: left; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700; transition: color 0.2s; }
+  .acc-btn:hover { color: var(--accent); }
+  .chevron { transition: transform 0.3s; color: var(--muted); font-size: 0.75rem; }
+  .acc-item.open .chevron { transform: rotate(180deg); }
+  .acc-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+  .acc-item.open .acc-body { max-height: 1200px; }
+  .acc-content { padding: 0 18px 18px; font-size: 0.89rem; line-height: 1.75; color: #bcc5d6; }
+
+  /* Timeline dos modelos */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before { content:''; position:absolute; left:8px; top:0; bottom:0; width:2px; background: linear-gradient(to bottom, var(--accent), var(--accent2), var(--accent3)); border-radius:2px; opacity:0.4; }
+  .tl-item { position: relative; margin-bottom: 28px; }
+  .tl-item:last-child { margin-bottom: 0; }
+  .tl-dot { position:absolute; left:-24px; top:4px; width:14px; height:14px; border-radius:50%; border:2px solid var(--accent); background:var(--bg); }
+  .tl-item:nth-child(2) .tl-dot { border-color: var(--accent2); }
+  .tl-item:nth-child(3) .tl-dot { border-color: var(--accent3); }
+  .tl-item:nth-child(4) .tl-dot { border-color: var(--accent4); }
+  .tl-item:nth-child(5) .tl-dot { border-color: var(--accent); }
+  .tl-year { font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; margin-bottom: 3px; }
+  .tl-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; margin-bottom: 4px; }
+  .tl-item:nth-child(1) .tl-name { color: var(--accent); }
+  .tl-item:nth-child(2) .tl-name { color: var(--accent2); }
+  .tl-item:nth-child(3) .tl-name { color: var(--accent3); }
+  .tl-item:nth-child(4) .tl-name { color: var(--accent4); }
+  .tl-item:nth-child(5) .tl-name { color: var(--accent); }
+  .tl-desc { font-size: 0.88rem; color: #bcc5d6; }
+  .tl-tag { display:inline-block; font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; padding:2px 7px; border-radius:5px; margin-left:8px; vertical-align:middle; }
+  .tl-item:nth-child(5) .tl-tag { background:rgba(167,139,250,0.15); color:var(--accent); }
+
+  /* Partículas */
+  .particles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 14px 0; }
+  @media(max-width:500px){ .particles-grid { grid-template-columns: 1fr; } }
+  .particle-card { border-radius: 12px; padding: 16px; text-align: center; }
+  .pc-p { background: rgba(167,139,250,0.07); border: 1px solid rgba(167,139,250,0.2); }
+  .pc-n { background: rgba(52,211,153,0.07); border: 1px solid rgba(52,211,153,0.2); }
+  .pc-e { background: rgba(244,114,182,0.07); border: 1px solid rgba(244,114,182,0.2); }
+  .pc-symbol { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; margin-bottom: 2px; }
+  .pc-p .pc-symbol { color: var(--accent); }
+  .pc-n .pc-symbol { color: var(--accent2); }
+  .pc-e .pc-symbol { color: var(--accent3); }
+  .pc-name { font-weight: 600; font-size: 0.85rem; margin-bottom: 8px; }
+  .pc-info { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+
+  /* Notação nuclear */
+  .notation { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 14px 0; }
+  .notation-box { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px 22px; position: relative; }
+  .notation-symbol { font-family: 'Syne', sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--text); }
+  .notation-super { position:absolute; top:8px; left:8px; font-family:'Syne',sans-serif; font-size:0.85rem; font-weight:700; color:var(--accent4); }
+  .notation-sub { position:absolute; bottom:8px; left:8px; font-family:'Syne',sans-serif; font-size:0.85rem; font-weight:700; color:var(--accent); }
+
+  /* Distribuição eletrônica visual */
+  .camadas { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+  .camada-badge { background: var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px 14px; font-family:'Syne',sans-serif; font-size:0.82rem; font-weight:700; }
+  .camada-badge span { color: var(--accent4); }
+
+  .quiz-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 48px; }
+  .quiz-head { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--accent4); margin-bottom: 4px; }
+  .quiz-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 24px; }
+  .qblock { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: none; }
+  .qblock.active { display: block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+  .qnum { font-size: 0.72rem; color: var(--muted); font-family: 'Syne', sans-serif; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 7px; }
+  .qtext { font-weight: 500; margin-bottom: 14px; font-size: 0.93rem; }
+  .opts { display: flex; flex-direction: column; gap: 7px; }
+  .opt { background: var(--card); border: 1.5px solid var(--border); border-radius: 9px; padding: 10px 14px; cursor: pointer; font-size: 0.86rem; transition: all 0.15s; text-align: left; color: var(--text); }
+  .opt:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .opt.correct { border-color: var(--accent2); background: rgba(52,211,153,0.09); color: var(--accent2); }
+  .opt.wrong { border-color: var(--accent3); background: rgba(244,114,182,0.07); color: var(--accent3); }
+  .qfeedback { font-size: 0.83rem; margin-top: 10px; padding: 9px 13px; border-radius: 7px; display: none; }
+  .qfeedback.show { display: block; }
+  .qfeedback.ok { background: rgba(52,211,153,0.07); color: var(--accent2); }
+  .qfeedback.nok { background: rgba(244,114,182,0.07); color: #f9a8d4; }
+  .quiz-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; }
+  .btn { background: var(--accent); color: #fff; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; border: none; border-radius: 9px; padding: 9px 20px; cursor: pointer; transition: all 0.18s; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(167,139,250,0.3); }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn.sec { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .btn.sec:hover { border-color: var(--muted); color: var(--text); box-shadow: none; }
+  .score-n { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800; color: var(--accent4); }
+
+  .cli { display: flex; align-items: flex-start; gap: 11px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.04); cursor: pointer; user-select: none; }
+  .cli:last-child { border-bottom: none; }
+  .cb { width: 19px; height: 19px; border: 2px solid var(--border); border-radius: 5px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; margin-top: 3px; font-size: 0.65rem; }
+  .cli.chk .cb { background: var(--accent2); border-color: var(--accent2); color: #000; }
+  .cli.chk .cl { text-decoration: line-through; color: var(--muted); }
+  .cl { font-size: 0.88rem; }
+
+  strong { color: var(--text); }
+  em { color: var(--accent4); font-style: normal; font-weight: 500; }
+  .divider { height: 1px; background: var(--border); margin: 18px 0; }
+  .sub-head { font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin: 24px 0 12px; }
+
+  .footer { text-align: center; padding: 36px 24px; color: var(--muted); font-size: 0.82rem; }
+  .footer span { color: var(--accent3); }
+  #scrollTop { position: fixed; bottom: 22px; right: 22px; width: 40px; height: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; z-index: 200; opacity: 0; font-size: 1rem; }
+  #scrollTop.show { opacity: 1; }
+  #scrollTop:hover { color: var(--text); transform: translateY(-2px); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">⚛️ Revisão · 3º Ano EM · Química</div>
+  <h1>Átomo <span>Express</span></h1>
+  <p>Modelos atômicos + estrutura do átomo — só o que cai na prova.</p>
+  <div class="pills">
+    <a href="#modelos" class="pill"><span class="dot da"></span>Modelos Atômicos</a>
+    <a href="#estrutura" class="pill"><span class="dot db"></span>Estrutura do Átomo</a>
+    <a href="#distribuicao" class="pill"><span class="dot dc"></span>Distribuição Eletrônica</a>
+    <a href="#quiz" class="pill">⚡ Quiz</a>
+  </div>
+</div>
+
+<div class="progress-bar-wrap">
+  <span class="progress-label">Progresso</span>
+  <div class="progress-track"><div class="progress-fill" id="pf"></div></div>
+  <span class="progress-pct" id="pp">0%</span>
+</div>
+
+<!-- ============================================ -->
+<!-- SEÇÃO 1: MODELOS ATÔMICOS                   -->
+<!-- ============================================ -->
+<div id="modelos">
+<div class="container"><div class="section">
+  <div class="sec-head">
+    <div class="sec-icon ia">🔭</div>
+    <div>
+      <h2>Modelos Atômicos</h2>
+      <p>A evolução histórica — cada modelo corrigiu o anterior</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Por que estudar os modelos? <span class="tag ta">Contexto</span></div>
+    <p style="font-size:0.91rem;color:#bcc5d6;">A prova cobra os <strong>nomes dos cientistas, as ideias de cada modelo e por que cada um foi superado</strong>. Não precisa decorar datas exatas, mas precisa saber a sequência e o que cada um propôs de diferente.</p>
+    <div class="hl"><strong>Ordem que cai:</strong> Dalton → Thomson → Rutherford → Bohr → Modelo Quântico (atual)</div>
+  </div>
+
+  <p class="sub-head">A linha do tempo</p>
+
+  <div class="card">
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">Séc. XIX · Dalton</div>
+        <div class="tl-name">Modelo da Bola de Bilhar</div>
+        <div class="tl-desc">O átomo é uma esfera <strong>maciça, indivisível e indestrutível</strong>. Átomos de mesmo elemento são iguais; de elementos diferentes são diferentes. Sem estrutura interna.</div>
+        <div class="hl y" style="margin-top:10px;"><strong>Limitação:</strong> Não explica fenômenos elétricos nem a existência de partículas menores.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1897 · Thomson</div>
+        <div class="tl-name">Modelo do Pudim de Passas</div>
+        <div class="tl-desc">Descobriu o <strong>elétron</strong> (com o tubo de raios catódicos). Propôs que o átomo é uma esfera de carga positiva com elétrons espalhados dentro dela — como passas no pudim.</div>
+        <div class="hl y" style="margin-top:10px;"><strong>Limitação:</strong> O experimento de Rutherford mostrou que a carga positiva não é difusa — está concentrada no centro.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1911 · Rutherford</div>
+        <div class="tl-name">Modelo Planetário / Nuclear</div>
+        <div class="tl-desc">Com o experimento da folha de ouro (partículas alfa), descobriu o <strong>núcleo</strong>: pequeno, denso e positivo. Os elétrons orbitam ao redor, como planetas ao redor do sol. O átomo é quase todo vazio.</div>
+        <div class="hl y" style="margin-top:10px;"><strong>Limitação:</strong> Pela física clássica, um elétron em órbita deveria emitir energia continuamente e cair no núcleo. Não explica os espectros atômicos.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1913 · Bohr</div>
+        <div class="tl-name">Modelo de Bohr (Camadas)</div>
+        <div class="tl-desc">Os elétrons ocupam <strong>níveis de energia definidos</strong> (camadas: K, L, M, N…). Enquanto estão no mesmo nível, não emitem energia. Ao <strong>saltar para nível mais baixo</strong>, emitem energia na forma de luz — o que explica os espectros.</div>
+        <div class="hl g" style="margin-top:10px;"><strong>Acerto crucial:</strong> Explica o espectro do hidrogênio e introduz a quantização de energia. É o modelo que embasa a distribuição eletrônica por camadas.</div>
+        <div class="hl y" style="margin-top:8px;"><strong>Limitação:</strong> Só funciona bem para o hidrogênio. Não explica átomos com muitos elétrons nem a forma dos orbitais.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">Atual · Schrödinger / Heisenberg</div>
+        <div class="tl-name">Modelo Quântico (Atual) <span class="tl-tag">MODELO ATUAL</span></div>
+        <div class="tl-desc">O elétron <strong>não tem órbita definida</strong> — existe uma <em>nuvem de probabilidade</em> chamada <strong>orbital</strong>. O Princípio da Incerteza de Heisenberg diz que não é possível conhecer ao mesmo tempo a posição exata e a velocidade do elétron. O modelo descreve onde o elétron <em>provavelmente</em> está.</div>
+        <div class="hl" style="margin-top:10px;"><strong>O que cai do modelo atual:</strong> saber que órbita ≠ orbital; que orbital é uma região de probabilidade; e que o elétron não tem trajetória definida.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <p class="sub-head">Comparação rápida — o que a prova pede</p>
+  <div class="card">
+    <table>
+      <tr><th>Modelo</th><th>Autor</th><th>Ideia central</th><th>O que descobriu/propôs</th></tr>
+      <tr><td><strong>Bola de bilhar</strong></td><td>Dalton</td><td>Átomo indivisível e maciço</td><td>Teoria atômica moderna (base)</td></tr>
+      <tr><td><strong>Pudim de passas</strong></td><td>Thomson</td><td>Carga + difusa com e⁻ embutidos</td><td>Elétron (raios catódicos)</td></tr>
+      <tr><td><strong>Planetário</strong></td><td>Rutherford</td><td>Núcleo pequeno + e⁻ ao redor</td><td>Núcleo atômico</td></tr>
+      <tr><td><strong>Camadas (níveis)</strong></td><td>Bohr</td><td>e⁻ em níveis de energia fixos</td><td>Quantização — explica espectros</td></tr>
+      <tr><td><strong>Quântico</strong></td><td>Schrödinger</td><td>Orbitais = nuvens de probabilidade</td><td>Modelo atual — dualidade onda-partícula</td></tr>
+    </table>
+  </div>
+
+  <div class="acc-item" id="e1">
+    <button class="acc-btn" onclick="tog('e1')">
+      <span>🔬 Experimento de Rutherford — como funciona</span><span class="chevron">▼</span>
+    </button>
+    <div class="acc-body"><div class="acc-content">
+      <p>Rutherford bombardeou uma <strong>fina folha de ouro</strong> com partículas alfa (carga positiva, massa grande) e colocou detectores ao redor.</p>
+      <div class="divider"></div>
+      <p><strong>O que esperava:</strong> as partículas passariam retas (modelo de Thomson previa carga difusa, sem concentração).</p>
+      <p style="margin-top:8px;"><strong>O que observou:</strong></p>
+      <ul class="nl" style="margin-top:6px;">
+        <li>A maioria das partículas <strong>passou sem desvio</strong> → o átomo é quase todo vazio</li>
+        <li>Poucas partículas <strong>desviaram levemente</strong> → há algo positivo no interior</li>
+        <li>Raríssimas partículas <strong>voltaram</strong> → existe um núcleo pequeno, denso e positivo</li>
+      </ul>
+      <div class="hl" style="margin-top:10px;"><strong>Conclusão:</strong> A carga positiva está concentrada no núcleo (pequeno e denso). O restante do átomo é vazio, ocupado pelos elétrons em órbita.</div>
+    </div></div>
+  </div>
+
+</div></div></div>
+
+<!-- ============================================ -->
+<!-- SEÇÃO 2: ESTRUTURA DO ÁTOMO                 -->
+<!-- ============================================ -->
+<div id="estrutura">
+<div class="container"><div class="section">
+  <div class="sec-head">
+    <div class="sec-icon ib">⚛️</div>
+    <div>
+      <h2>Estrutura do Átomo</h2>
+      <p>Próton, nêutron, elétron — e os números que identificam cada elemento</p>
+    </div>
+  </div>
+
+  <p class="sub-head">As três partículas subatômicas</p>
+
+  <div class="particles-grid">
+    <div class="particle-card pc-p">
+      <div class="pc-symbol">p⁺</div>
+      <div class="pc-name">Próton</div>
+      <div class="pc-info">Carga: +1<br>Local: núcleo<br>Define o elemento<br>(= número atômico Z)</div>
+    </div>
+    <div class="particle-card pc-n">
+      <div class="pc-symbol">n⁰</div>
+      <div class="pc-name">Nêutron</div>
+      <div class="pc-info">Carga: 0 (neutro)<br>Local: núcleo<br>Junto com p⁺ forma<br>o número de massa A</div>
+    </div>
+    <div class="particle-card pc-e">
+      <div class="pc-symbol">e⁻</div>
+      <div class="pc-name">Elétron</div>
+      <div class="pc-info">Carga: −1<br>Local: eletrosfera<br>Massa desprezível<br>Define ligações químicas</div>
+    </div>
+  </div>
+
+  <p class="sub-head">Notação nuclear — a representação cobrada</p>
+
+  <div class="card">
+    <div class="card-title">📐 Como ler o símbolo do elemento <span class="tag tb">Essencial</span></div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;margin:18px 0;">
+      <div class="notation-box">
+        <div class="notation-super">A</div>
+        <div class="notation-sub">Z</div>
+        <div class="notation-symbol" style="padding:0 10px 0 22px;">X</div>
+      </div>
+      <div style="font-size:0.88rem;color:#bcc5d6;max-width:300px;">
+        <p><strong style="color:var(--accent4);">A</strong> = número de massa (prótons + nêutrons)</p>
+        <p style="margin-top:6px;"><strong style="color:var(--accent);">Z</strong> = número atômico (só prótons)</p>
+        <p style="margin-top:6px;"><strong>X</strong> = símbolo do elemento</p>
+      </div>
+    </div>
+    <div class="formula">Nêutrons (n) = A − Z</div>
+    <div class="hl g" style="margin-top:12px;"><strong>Exemplo:</strong> ¹⁶₈O → Z=8 (8 prótons), A=16, n=16−8=<em>8 nêutrons</em>. Átomo neutro → 8 elétrons.</div>
+  </div>
+
+  <p class="sub-head">Relações importantes</p>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title" style="font-size:0.9rem;">🔢 Átomo neutro</div>
+      <div class="formula" style="font-size:0.9rem;">nº elétrons = nº prótons = Z</div>
+      <p style="font-size:0.84rem;color:#bcc5d6;margin-top:8px;">No átomo neutro, a carga positiva (prótons) é igual à negativa (elétrons). Eles se cancelam.</p>
+    </div>
+    <div class="card">
+      <div class="card-title" style="font-size:0.9rem;">⚡ Íons</div>
+      <div class="formula" style="font-size:0.88rem;">Cátion (+): perdeu e⁻<br>Ânion (−): ganhou e⁻</div>
+      <p style="font-size:0.84rem;color:#bcc5d6;margin-top:8px;">Ex: Na⁺ → perdeu 1 e⁻ → tem 10 e⁻ (Z=11, mas 11−1=10).</p>
+    </div>
+  </div>
+
+  <p class="sub-head">Isótopos, Isóbaros e Isótonos — os 3 que caem</p>
+
+  <div class="card">
+    <table>
+      <tr><th>Nome</th><th>O que é igual</th><th>O que é diferente</th><th>Exemplo</th></tr>
+      <tr>
+        <td><strong style="color:var(--accent);">Isótopos</strong></td>
+        <td>Número atômico Z (mesmo elemento)</td>
+        <td>Número de massa A (diferente nº de nêutrons)</td>
+        <td>¹H e ²H e ³H (Hidrogênio, Deutério, Trítio)</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--accent2);">Isóbaros</strong></td>
+        <td>Número de massa A</td>
+        <td>Número atômico Z (elementos diferentes)</td>
+        <td>⁴⁰₁₈Ar e ⁴⁰₂₀Ca</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--accent3);">Isótonos</strong></td>
+        <td>Número de nêutrons</td>
+        <td>Z e A diferentes</td>
+        <td>¹⁴₆C e ¹⁵₇N (ambos com 8 nêutrons)</td>
+      </tr>
+    </table>
+    <div class="hl y" style="margin-top:12px;"><strong>Macete:</strong> IsóT<em>o</em>pos = mesm<em>o</em> Z | IsóB<em>a</em>ros = mesm<em>a</em> massa A | IsóT<em>on</em>os = mesmos nêuTr<em>on</em>s.</div>
+  </div>
+
+  <div class="acc-item" id="f1">
+    <button class="acc-btn" onclick="tog('f1')">
+      <span>🧮 Exercício resolvido — isótopos do cloro</span><span class="chevron">▼</span>
+    </button>
+    <div class="acc-body"><div class="acc-content">
+      <p>O cloro tem dois isótopos naturais: <strong>³⁵₁₇Cl</strong> e <strong>³⁷₁₇Cl</strong>. Para cada um, determine prótons, nêutrons e elétrons (átomo neutro).</p>
+      <div class="divider"></div>
+      <p><strong>³⁵₁₇Cl:</strong> Z=17 → 17 p⁺ e 17 e⁻ | n = 35−17 = <em>18 nêutrons</em></p>
+      <p style="margin-top:6px;"><strong>³⁷₁₇Cl:</strong> Z=17 → 17 p⁺ e 17 e⁻ | n = 37−17 = <em>20 nêutrons</em></p>
+      <div class="hl g" style="margin-top:10px;"><strong>Conclusão:</strong> Mesmo elemento (Z=17), massas diferentes → isótopos. O Z não muda, só o número de nêutrons muda.</div>
+    </div></div>
+  </div>
+
+</div></div></div>
+
+<!-- ============================================ -->
+<!-- SEÇÃO 3: DISTRIBUIÇÃO ELETRÔNICA            -->
+<!-- ============================================ -->
+<div id="distribuicao">
+<div class="container"><div class="section">
+  <div class="sec-head">
+    <div class="sec-icon ic">🌀</div>
+    <div>
+      <h2>Distribuição Eletrônica</h2>
+      <p>Como os elétrons se organizam nas camadas e subcamadas</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">As camadas (níveis de energia) <span class="tag tc">Base do Bohr</span></div>
+    <p style="font-size:0.91rem;color:#bcc5d6;">Os elétrons se distribuem em camadas ao redor do núcleo, da mais próxima para a mais afastada. Cada camada tem uma capacidade máxima de elétrons.</p>
+    <div class="camadas" style="margin-top:14px;">
+      <div class="camada-badge">K <span>(n=1)</span> → máx. 2 e⁻</div>
+      <div class="camada-badge">L <span>(n=2)</span> → máx. 8 e⁻</div>
+      <div class="camada-badge">M <span>(n=3)</span> → máx. 18 e⁻</div>
+      <div class="camada-badge">N <span>(n=4)</span> → máx. 32 e⁻</div>
+    </div>
+    <div class="formula" style="margin-top:12px;">Capacidade máxima de cada camada = 2n²</div>
+    <div class="hl" style="margin-top:8px;"><strong>Na prova do EM:</strong> raramente pedem além da camada N. Foque em K, L e M.</div>
+  </div>
+
+  <p class="sub-head">Como preencher — regras que caem</p>
+
+  <div class="acc-item open" id="g1">
+    <button class="acc-btn" onclick="tog('g1')">
+      <span>📋 Distribuição por camadas (mais simples)</span><span class="chevron">▼</span>
+    </button>
+    <div class="acc-body"><div class="acc-content">
+      <p>Preencha da camada K para fora, respeitando o máximo de cada uma. A última camada (de valência) não pode ter mais de 8 e⁻.</p>
+      <div class="divider"></div>
+      <p><strong>Exemplo — Sódio (Na, Z=11):</strong></p>
+      <p style="margin-top:6px;">K → 2 e⁻ | L → 8 e⁻ | M → 1 e⁻ &nbsp; (total: 2+8+1 = 11 ✓)</p>
+      <div class="hl g" style="margin-top:10px;"><strong>Elétrons de valência = 1</strong> (os da última camada). É isso que define as ligações e o grupo na tabela periódica.</div>
+      <div class="divider"></div>
+      <p><strong>Exemplo — Cloro (Cl, Z=17):</strong></p>
+      <p style="margin-top:6px;">K → 2 | L → 8 | M → 7 &nbsp; (total: 17 ✓)</p>
+      <div class="hl g" style="margin-top:10px;"><strong>Elétrons de valência = 7.</strong> Cl está no grupo 17 (VIIA) — precisa de 1 e⁻ para completar o octeto.</div>
+    </div></div>
+  </div>
+
+  <div class="acc-item" id="g2">
+    <button class="acc-btn" onclick="tog('g2')">
+      <span>🔬 Distribuição por subcamadas (s, p, d, f)</span><span class="chevron">▼</span>
+    </button>
+    <div class="acc-body"><div class="acc-content">
+      <p>Cada camada se divide em subcamadas. A ordem de preenchimento segue o <strong>Diagrama de Linus Pauling</strong> (ou diagrama de energia crescente).</p>
+      <div class="divider"></div>
+      <p><strong>Capacidade de cada subcamada:</strong></p>
+      <ul class="nl" style="margin-top:6px;">
+        <li><strong>s</strong> → máximo 2 elétrons</li>
+        <li><strong>p</strong> → máximo 6 elétrons</li>
+        <li><strong>d</strong> → máximo 10 elétrons</li>
+        <li><strong>f</strong> → máximo 14 elétrons (raramente cobrado no EM)</li>
+      </ul>
+      <div class="divider"></div>
+      <p><strong>Ordem de preenchimento (Diagrama de Pauling):</strong></p>
+      <div class="formula" style="font-size:0.82rem;margin-top:8px;">1s → 2s → 2p → 3s → 3p → 4s → 3d → 4p → 5s → 4d → 5p…</div>
+      <div class="hl" style="margin-top:10px;"><strong>Exemplo — Ferro (Fe, Z=26):</strong><br>1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d⁶<br>Soma: 2+2+6+2+6+2+6 = 26 ✓</div>
+      <div class="hl y" style="margin-top:8px;"><strong>Atenção:</strong> 4s preenche antes de 3d (no diagrama, a diagonal passa por 4s primeiro). Na distribuição do Fe, o 4s² vem antes do 3d⁶.</div>
+    </div></div>
+  </div>
+
+  <p class="sub-head">Elétrons de valência e a Tabela Periódica</p>
+
+  <div class="card">
+    <div class="card-title">🗂️ Ligação entre distribuição e tabela <span class="tag tb">Muito cobrado</span></div>
+    <table>
+      <tr><th>Elétrons de valência</th><th>Grupo (família)</th><th>Exemplo</th></tr>
+      <tr><td>1</td><td>1 (IA) — metais alcalinos</td><td>Na (2, 8, 1)</td></tr>
+      <tr><td>2</td><td>2 (IIA) — metais alcalino-terrosos</td><td>Mg (2, 8, 2)</td></tr>
+      <tr><td>5</td><td>15 (VA)</td><td>N (2, 5)</td></tr>
+      <tr><td>6</td><td>16 (VIA) — calcogênios</td><td>O (2, 6)</td></tr>
+      <tr><td>7</td><td>17 (VIIA) — halogênios</td><td>Cl (2, 8, 7)</td></tr>
+      <tr><td>8</td><td>18 (VIII/0) — gases nobres</td><td>Ar (2, 8, 8)</td></tr>
+    </table>
+    <div class="hl g" style="margin-top:12px;"><strong>E o período?</strong> O número de camadas ocupadas = o período do elemento na tabela. Na com 3 camadas (K, L, M) está no período 3.</div>
+  </div>
+
+  <div class="acc-item" id="g3">
+    <button class="acc-btn" onclick="tog('g3')">
+      <span>⚡ Íons — como a distribuição muda</span><span class="chevron">▼</span>
+    </button>
+    <div class="acc-body"><div class="acc-content">
+      <p>Quando um átomo vira íon, o número de prótons não muda — mas o número de elétrons sim. Refaça a distribuição com o novo número de elétrons.</p>
+      <div class="divider"></div>
+      <p><strong>Exemplo — Cl⁻ (ganhou 1 e⁻, Z=17):</strong></p>
+      <p style="margin-top:6px;">Total de e⁻ = 17+1 = 18 → K: 2 | L: 8 | M: 8</p>
+      <div class="hl g" style="margin-top:8px;"><strong>Isoeletrônico com Ar (Z=18)!</strong> Cl⁻ e Ar têm a mesma distribuição eletrônica (18 e⁻).</div>
+      <div class="divider"></div>
+      <p><strong>Exemplo — Na⁺ (perdeu 1 e⁻, Z=11):</strong></p>
+      <p style="margin-top:6px;">Total de e⁻ = 11−1 = 10 → K: 2 | L: 8</p>
+      <div class="hl g" style="margin-top:8px;"><strong>Isoeletrônico com Ne (Z=10).</strong> Na⁺ e Ne têm os mesmos 10 elétrons.</div>
+    </div></div>
+  </div>
+
+</div></div></div>
+
+<!-- CHECKLIST -->
+<div class="container"><div class="section">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);">✅</div>
+    <div><h2 style="color:var(--accent4);">Checklist</h2><p>Marque o que você já domina</p></div>
+  </div>
+  <div class="card">
+    <p class="sub-head" style="margin-top:0;">Modelos Atômicos</p>
+    <div class="cli" onclick="chk(this)"><span class="cb"></span><span class="cl">Sei a sequência: Dalton → Thomson → Rutherford → Bohr → Quântico</span></div>
+    <div class="cli" onclick="chk(this)"><span class="cb"></span><span class="cl">Sei o que Thomson descobriu (elétron) e o modelo dele (pudim de passas)</span></div>
+    <div class="cli" onclick="chk(this)"><span class="cb"></span><span class="cl">Sei o experimento de Rutherford e o que ele concluiu (núcleo + átomo vazio)</span></div>
+    <div class="cli" onclick="chk(this)"><span class="cb"></span><span class="cl">Sei que Bohr propôs níveis de energia e explica espectros</span></div>
+    <div class="cli" onclick="chk(this)"><span class="cb"></span><span class="cl">Sei que o modelo atual usa orbitais (nuvem de probabilidade), não órbitas</span></div>
+    <p class="sub-head">Estrutura do Átomo</p>
+    <div class="cli" onclick="chk(this)"><span class="cb"></span><span class="cl">Sei ler a notação nuclear: Z = prótons, A = prótons+nêutrons, n = A−Z</span></div>
+    <div class="cli" onclick="chk(this)"><span class="cb"></span><span class="cl">Sei diferenciar isótopos, isóbaros e isótonos</span></div>
+    <div class="cli" onclick="chk(this)"><span class="cb"></span><span class="cl">Sei que cátion perdeu e⁻ e ânion ganhou e⁻</span></div>
+    <p class="sub-head">Distribuição Eletrônica</p>
+    <div class="cli" onclick="chk(this)"><span class="cb"></span><span class="cl">Sei a capacidade máxima das camadas K(2), L(8), M(18)</span></div>
+    <div class="cli" onclick="chk(this)"><span class="cb"></span><span class="cl">Consigo fazer a distribuição por camadas de qualquer elemento até Z=36</span></div>
+    <div class="cli" onclick="chk(this)"><span class="cb"></span><span class="cl">Sei que elétrons de valência = elétrons da última camada = grupo na TP</span></div>
+    <div class="cli" onclick="chk(this)"><span class="cb"></span><span class="cl">Sei refazer a distribuição de um íon com o número correto de e⁻</span></div>
+  </div>
+</div></div>
+
+<!-- QUIZ -->
+<div id="quiz">
+<div class="container"><div class="section" style="padding-bottom:80px;">
+  <div class="quiz-wrap">
+    <div class="quiz-head">⚡ Quiz Rápido</div>
+    <div class="quiz-sub">8 questões direto ao ponto — testa o que você aprendeu!</div>
+
+    <div class="qblock active" data-q="1">
+      <div class="qnum">Questão 1 de 8</div>
+      <div class="qtext">O modelo atômico que propôs que os elétrons ocupam níveis de energia fixos e explica os espectros atômicos é o de:</div>
+      <div class="opts">
+        <button class="opt" onclick="ans(this,false)">A) Dalton</button>
+        <button class="opt" onclick="ans(this,false)">B) Rutherford</button>
+        <button class="opt" onclick="ans(this,true)">C) Bohr</button>
+        <button class="opt" onclick="ans(this,false)">D) Thomson</button>
+      </div>
+      <div class="qfeedback">Bohr (1913) propôs que os elétrons ocupam camadas com energia definida e quantizada. Ao saltar de camada, emitem ou absorvem luz — o que explica os espectros. Thomson descobriu o elétron; Rutherford descobriu o núcleo.</div>
+    </div>
+
+    <div class="qblock" data-q="2">
+      <div class="qnum">Questão 2 de 8</div>
+      <div class="qtext">No experimento da folha de ouro de Rutherford, a conclusão de que o átomo é "quase todo vazio" veio da observação de que:</div>
+      <div class="opts">
+        <button class="opt" onclick="ans(this,false)">A) Todas as partículas alfa foram desviadas</button>
+        <button class="opt" onclick="ans(this,true)">B) A grande maioria das partículas alfa passou sem desvio</button>
+        <button class="opt" onclick="ans(this,false)">C) As partículas alfa pararam dentro da folha</button>
+        <button class="opt" onclick="ans(this,false)">D) As partículas alfa se dividiram ao colidir</button>
+      </div>
+      <div class="qfeedback">A maioria das partículas passou sem desvio → o átomo é praticamente vazio. Poucas desviaram ou voltaram → existe um núcleo pequeno e denso no centro. Se fosse tudo preenchido (modelo de Thomson), todas desviariam.</div>
+    </div>
+
+    <div class="qblock" data-q="3">
+      <div class="qnum">Questão 3 de 8</div>
+      <div class="qtext">O elemento ⁴⁰₂₀Ca tem quantos nêutrons?</div>
+      <div class="opts">
+        <button class="opt" onclick="ans(this,false)">A) 40</button>
+        <button class="opt" onclick="ans(this,false)">B) 60</button>
+        <button class="opt" onclick="ans(this,true)">C) 20</button>
+        <button class="opt" onclick="ans(this,false)">D) 18</button>
+      </div>
+      <div class="qfeedback">n = A − Z = 40 − 20 = 20 nêutrons. Z=20 são os prótons; A=40 é a massa total (prótons + nêutrons). Fácil, mas é armadilha clássica confundir A com n.</div>
+    </div>
+
+    <div class="qblock" data-q="4">
+      <div class="qnum">Questão 4 de 8</div>
+      <div class="qtext">Dois átomos são isótopos quando possuem:</div>
+      <div class="opts">
+        <button class="opt" onclick="ans(this,true)">A) Mesmo número atômico Z e massas diferentes</button>
+        <button class="opt" onclick="ans(this,false)">B) Mesma massa A e Z diferentes</button>
+        <button class="opt" onclick="ans(this,false)">C) Mesmo número de nêutrons</button>
+        <button class="opt" onclick="ans(this,false)">D) Mesma configuração eletrônica</button>
+      </div>
+      <div class="qfeedback">Isótopos = mesmo Z (mesmo elemento), A diferentes (número de nêutrons diferente). Ex: ¹H, ²H, ³H — todos têm Z=1, mas massas 1, 2 e 3. Isóbaros = mesma massa A. Isótonos = mesmo nº de nêutrons.</div>
+    </div>
+
+    <div class="qblock" data-q="5">
+      <div class="qnum">Questão 5 de 8</div>
+      <div class="qtext">O átomo de cloro (Z=17) tem a distribuição eletrônica por camadas:</div>
+      <div class="opts">
+        <button class="opt" onclick="ans(this,false)">A) 2, 8, 8</button>
+        <button class="opt" onclick="ans(this,false)">B) 2, 6, 9</button>
+        <button class="opt" onclick="ans(this,true)">C) 2, 8, 7</button>
+        <button class="opt" onclick="ans(this,false)">D) 2, 9, 6</button>
+      </div>
+      <div class="qfeedback">Z=17 → K: 2, L: 8, M: 17−10 = 7. Total: 2+8+7=17 ✓. Cloro tem 7 elétrons de valência → grupo 17 (VIIA), família dos halogênios. Precisa ganhar 1 e⁻ para completar o octeto.</div>
+    </div>
+
+    <div class="qblock" data-q="6">
+      <div class="qnum">Questão 6 de 8</div>
+      <div class="qtext">No modelo quântico atual, o orbital representa:</div>
+      <div class="opts">
+        <button class="opt" onclick="ans(this,false)">A) A trajetória circular do elétron ao redor do núcleo</button>
+        <button class="opt" onclick="ans(this,false)">B) O nível de energia com distância fixa do núcleo</button>
+        <button class="opt" onclick="ans(this,true)">C) Uma região de probabilidade de encontrar o elétron</button>
+        <button class="opt" onclick="ans(this,false)">D) O caminho elíptico do elétron</button>
+      </div>
+      <div class="qfeedback">No modelo quântico (Schrödinger), o elétron não tem trajetória definida — existe uma nuvem de probabilidade chamada orbital. Órbita (Bohr) ≠ Orbital (modelo atual). O Princípio da Incerteza de Heisenberg garante que não se pode saber posição e velocidade exatas ao mesmo tempo.</div>
+    </div>
+
+    <div class="qblock" data-q="7">
+      <div class="qnum">Questão 7 de 8</div>
+      <div class="qtext">O íon Na⁺ (Z=11) possui quantos elétrons?</div>
+      <div class="opts">
+        <button class="opt" onclick="ans(this,false)">A) 11</button>
+        <button class="opt" onclick="ans(this,false)">B) 12</button>
+        <button class="opt" onclick="ans(this,true)">C) 10</button>
+        <button class="opt" onclick="ans(this,false)">D) 9</button>
+      </div>
+      <div class="qfeedback">Na⁺ = sódio que perdeu 1 elétron. Z=11 → átomo neutro teria 11 e⁻. Como perdeu 1: 11−1 = 10 elétrons. Na⁺ é isoeletrônico com Ne (que tem Z=10 e 10 e⁻).</div>
+    </div>
+
+    <div class="qblock" data-q="8">
+      <div class="qnum">Questão 8 de 8</div>
+      <div class="qtext">Qual cientista foi responsável pela descoberta do elétron, utilizando tubos de raios catódicos?</div>
+      <div class="opts">
+        <button class="opt" onclick="ans(this,false)">A) Dalton</button>
+        <button class="opt" onclick="ans(this,false)">B) Rutherford</button>
+        <button class="opt" onclick="ans(this,false)">C) Bohr</button>
+        <button class="opt" onclick="ans(this,true)">D) Thomson</button>
+      </div>
+      <div class="qfeedback">Thomson (1897) usou tubos de raios catódicos e descobriu o elétron — uma partícula com carga negativa, muito menor que o átomo. Isso derrubou o modelo de Dalton (átomo indivisível) e originou o modelo do pudim de passas.</div>
+    </div>
+
+    <div class="qblock" data-q="result" style="text-align:center; padding:28px 20px;">
+      <div style="font-size:2.4rem;margin-bottom:10px;">🎉</div>
+      <div class="quiz-head" style="margin-bottom:4px;">Resultado</div>
+      <div class="score-n" id="sn"></div>
+      <div id="sm" style="color:var(--muted);font-size:0.88rem;margin-top:6px;"></div>
+      <button class="btn" onclick="restart()" style="margin-top:18px;">🔁 Refazer</button>
+    </div>
+
+    <div class="quiz-nav">
+      <button class="btn sec" id="bp" onclick="prev()" disabled>← Anterior</button>
+      <span style="font-size:0.78rem;color:var(--muted);" id="qc">1 / 8</span>
+      <button class="btn" id="bn" onclick="nxt()" disabled>Próxima →</button>
+    </div>
+  </div>
+</div></div></div>
+
+<div class="footer">Feito com <span>♥</span> — vai arrasar na prova! ⚛️</div>
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const p = Math.round(window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100);
+    document.getElementById('pf').style.width = p + '%';
+    document.getElementById('pp').textContent = p + '%';
+    document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 400);
+  });
+
+  function tog(id) { document.getElementById(id).classList.toggle('open'); }
+
+  function chk(el) {
+    el.classList.toggle('chk');
+    el.querySelector('.cb').textContent = el.classList.contains('chk') ? '✓' : '';
+  }
+
+  let cur = 1, score = 0, amap = {};
+  const TOTAL = 8;
+
+  function ans(btn, ok) {
+    const q = btn.closest('.qblock');
+    const n = parseInt(q.dataset.q);
+    if (amap[n]) return;
+    amap[n] = true;
+    q.querySelectorAll('.opt').forEach(o => o.disabled = true);
+    const fb = q.querySelector('.qfeedback');
+    fb.classList.add('show');
+    if (ok) {
+      btn.classList.add('correct'); fb.classList.add('ok');
+      fb.textContent = '✅ Correto! ' + fb.textContent; score++;
+    } else {
+      btn.classList.add('wrong'); fb.classList.add('nok');
+      fb.textContent = '❌ ' + fb.textContent;
+      q.querySelectorAll('.opt').forEach(o => { if (o.getAttribute('onclick').includes('true')) o.classList.add('correct'); });
+    }
+    document.getElementById('bn').disabled = false;
+  }
+
+  function goQ(n) {
+    document.querySelectorAll('.qblock').forEach(q => q.classList.remove('active'));
+    cur = n;
+    if (n > TOTAL) { showRes(); return; }
+    document.querySelector(`.qblock[data-q="${n}"]`).classList.add('active');
+    document.getElementById('qc').textContent = n + ' / ' + TOTAL;
+    document.getElementById('bp').disabled = n === 1;
+    document.getElementById('bn').disabled = !amap[n];
+    document.getElementById('bn').textContent = n === TOTAL ? 'Ver Resultado →' : 'Próxima →';
+  }
+
+  function nxt() { goQ(cur < TOTAL ? cur + 1 : TOTAL + 1); }
+  function prev() { if (cur > 1) goQ(cur - 1); }
+
+  function showRes() {
+    document.querySelectorAll('.qblock').forEach(q => q.classList.remove('active'));
+    document.querySelector('.qblock[data-q="result"]').classList.add('active');
+    document.getElementById('sn').textContent = score + ' / ' + TOTAL;
+    const msgs = [
+      [0,4,'Revise com calma — você consegue! 💪'],
+      [5,6,'Bom caminho, tá chegando lá. 📚'],
+      [7,7,'Muito bem! Quase perfeito. 🔥'],
+      [8,8,'100%! Mandou demais! 🏆']
+    ];
+    document.getElementById('sm').textContent = msgs.find(([a,b]) => score >= a && score <= b)?.[2] || '';
+    document.getElementById('bn').disabled = true;
+    document.getElementById('bp').disabled = true;
+    document.getElementById('qc').textContent = '✓ Fim';
+  }
+
+  function restart() {
+    score = 0; amap = {};
+    document.querySelectorAll('.opt').forEach(o => { o.disabled = false; o.classList.remove('correct','wrong'); });
+    document.querySelectorAll('.qfeedback').forEach(f => {
+      f.classList.remove('show','ok','nok');
+      f.textContent = f.textContent.replace(/^(✅ Correto! |❌ )/, '');
+    });
+    goQ(1);
+  }
+</script>
+</body>
+</html>
